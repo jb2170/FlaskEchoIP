@@ -1,15 +1,14 @@
 """WSGI Echo IP"""
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from typing import Generator
 from http import HTTPStatus
-from wsgiref.types import WSGIEnvironment, StartResponse
 
 class App:
     forwarded_ip_header_name = "X-Forwarded-For"
 
-    def __init__(self, env: WSGIEnvironment, start_response: StartResponse) -> None:
+    def __init__(self, env, start_response) -> None:
         self.env = env
         self.start_response = start_response
 
@@ -20,7 +19,7 @@ class App:
         return self.do_200()
 
     def get_header(self, header_name: str) -> str | None:
-        return self.env.get(f"HTTP_{header_name.replace("-", "_").upper()}")
+        return self.env.get(f"HTTP_{header_name.replace('-', '_').upper()}")
 
     @property
     def ip(self) -> str | None:
