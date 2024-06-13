@@ -1,6 +1,6 @@
 """WSGI Echo IP"""
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 from typing import Generator
 from http import HTTPStatus
@@ -50,8 +50,6 @@ class App:
     def do_200(self):
         code = HTTPStatus.OK
         headers = []
-        body = b""
-
         body = f"{self.ip}\n".encode()
 
         return self.do_respond(code, headers, body)
