@@ -1,14 +1,19 @@
 """WSGI Echo IP"""
 
-__version__ = "1.0.2"
+__version__ = "1.1.0"
+
+import os
 
 from typing import Generator
 from http import HTTPStatus
 
 class App:
-    forwarded_ip_header_name = "X-Forwarded-For"
-
     def __init__(self, env, start_response) -> None:
+        self.forwarded_ip_header_name = os.environ.get(
+            "FORWARDED_IP_HEADER_NAME",
+            "X-Forwarded-For"
+        )
+
         self.env = env
         self.start_response = start_response
 
@@ -28,7 +33,8 @@ class App:
     def do_respond(
         self,
         code: HTTPStatus,
-        headers, body: bytes,
+        headers,
+        body: bytes,
         content_type = "text/plain; charset=UTF-8"
     ) -> Generator[bytes, None, None]:
         response_line = f"{code} {code.phrase}"
