@@ -1,6 +1,6 @@
 """WSGI Echo IP"""
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 import os
 
@@ -16,6 +16,20 @@ class App:
 
         self.env = env
         self.start_response = start_response
+
+        # self._fix_env_latin1_utf8()
+
+    def _fix_env_latin1_utf8(self):
+        """
+        Fix strings which were decoded from bytes as though they were Latin-1,
+        when in reality they were most likely UTF-8
+        """
+        # XXX only checks for HTTP_ entries because this is a basic app.
+        # Entries like "PATH_INFO" should also be fixed. Use a framework
+        # like Flask and let it do its work in a fully fledged app.
+        for k, v in self.env.items():
+            if k.startswith("HTTP_"):
+                self.env[k] = v.encode("latin1").decode("utf8")
 
     def __iter__(self):
         if self.ip is None:
